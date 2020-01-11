@@ -9,4 +9,4 @@ The program uses an adaptive voice activity detection technique to compress audi
 
 ## Usage
 
-`python silenceRemoval.py path/to/in.wav path/to/out.wav`
+```python silenceRemoval.py path/to/in.wav path/to/out.wav```
