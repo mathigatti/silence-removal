@@ -5,6 +5,7 @@
 
 import numpy
 import scipy.io.wavfile as wf
+from pydub import AudioSegment
 import sys
 
 print(sys.argv)
@@ -70,28 +71,20 @@ class VoiceActivityDetection:
 
     def get_voice_samples(self):
         return self.__out_buffer
- 
 
-# usage:
-wav = wf.read(sys.argv[1])
-ch = wav[1].shape[1]
+filein = sys.argv[1]
+fileout = sys.argv[2]
+
+sound = AudioSegment.from_wav(filein)
+sound = sound.set_channels(1)
+sound.export("temp.wav", format="wav")
+
+wav = wf.read("temp.wav")
 sr = wav[0]
 
 c0 = wav[1][:,0]
-c1 = wav[1][:,1]
-
-print('c0 %i'%c0.size)
 
 vad = VoiceActivityDetection()
 vad.process(c0)
 voice_samples = vad.get_voice_samples()
-wf.write('%s.1.wav'%sys.argv[2],sr,voice_samples)
-
-if ch==1:
-    exit()
-    
-vad = VoiceActivityDetection()
-vad.process(c1)
-voice_samples = vad.get_voice_samples()
-wf.write('%s.2.wav'%sys.argv[2],sr,voice_samples)
-
+wf.write(fileout,sr,voice_samples)
