@@ -8,7 +8,22 @@ import scipy.io.wavfile as wf
 from pydub import AudioSegment
 import sys
 
-print(sys.argv)
+# From https://stackoverflow.com/questions/29547218/
+# remove-silence-at-the-beginning-and-at-the-end-of-wave-files-with-pydub
+def detect_leading_silence(sound, silence_threshold=-50.0, chunk_size=10):
+    '''
+    sound is a pydub.AudioSegment
+    silence_threshold in dB
+    chunk_size in ms
+    iterate over chunks until you find the first one with sound
+    '''
+    trim_ms = 0  # ms
+    while sound[trim_ms:trim_ms+chunk_size].dBFS < silence_threshold:
+        trim_ms += chunk_size
+
+    return trim_ms
+
+
 
 class VoiceActivityDetection:
 
@@ -88,3 +103,13 @@ vad = VoiceActivityDetection()
 vad.process(c0)
 voice_samples = vad.get_voice_samples()
 wf.write(fileout,sr,voice_samples)
+
+
+# Trimming in case there is something else to remove
+sound = AudioSegment.from_file(fileout, format="wav")
+start_trim = detect_leading_silence(sound)
+end_trim = detect_leading_silence(sound.reverse())
+
+duration = len(sound)
+trimmed_sound = sound[start_trim:duration-end_trim]
+trimmed_sound.export(fileout, format="wav")
