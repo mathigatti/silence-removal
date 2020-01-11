@@ -1,5 +1,5 @@
-# Adaptive voice activity detection
-Compress audio file by removing silence:
+# Silence Removal
+The program uses an adaptive voice activity detection technique to compress audio files by removing silence.
 
 ## Requirements
 
