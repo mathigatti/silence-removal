@@ -1,7 +1,12 @@
 # Adaptive voice activity detection
+Compress audio file by removing silence:
 
-## USAGE: 
+## Requirements
 
-Compress audio file by rempving silence:
+- pydub
+- scipy
+- numpy
+
+## Usage
 
 `python vad.py path/to/in.wav path/to/out.wav`
