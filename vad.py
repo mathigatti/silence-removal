@@ -97,7 +97,7 @@ sound.export("temp.wav", format="wav")
 wav = wf.read("temp.wav")
 sr = wav[0]
 
-c0 = wav[1][:,0]
+c0 = wav[1]
 
 vad = VoiceActivityDetection()
 vad.process(c0)
